@@ -1,35 +1,53 @@
 import React, { useContext } from "react";
-import { StyleSheet, Text, View, FlatList, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { Context } from "../context/BlogContext";
 import { AntDesign } from "@expo/vector-icons";
-const IndexScreen = () => {
-  const { state, addBlogPost } = useContext(Context);
-  console.log(addBlogPost);
+const IndexScreen = ({ navigation }) => {
+  const { state, addBlogPost, deleteBlogPost } = useContext(Context);
+
   return (
     <View style={styles.container}>
-      <Text>Index Screen</Text>
       <Button title="Add Post" onPress={addBlogPost} />
       <FlatList
         data={state}
         keyExtractor={(blog) => blog.title}
         renderItem={({ item }) => {
           return (
-            <View style={styles.row}>
-              <Text style={styles.title}>{item.title}</Text>
-              <AntDesign
-                name="delete"
-                style={styles.icon}
-                size={24}
-                color="black"
-              />
-            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Show", { id: item.id })}
+            >
+              <View style={styles.row}>
+                <Text style={styles.title}>
+                  {item.title} - {item.id}
+                </Text>
+                <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
+                  <AntDesign
+                    name="delete"
+                    style={styles.icon}
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           );
         }}
       />
     </View>
   );
 };
-
+IndexScreen.navigationOptions = () => {
+  return {
+    headerRight: () => <AntDesign name="plus" size={24} color="black" />,
+  };
+};
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
