@@ -14,7 +14,6 @@ const IndexScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Button title="Add Post" onPress={addBlogPost} />
       <FlatList
         data={state}
         keyExtractor={(blog) => blog.title}
@@ -27,6 +26,7 @@ const IndexScreen = ({ navigation }) => {
                 <Text style={styles.title}>
                   {item.title} - {item.id}
                 </Text>
+                <Text style={styles.title}>{item.content}</Text>
                 <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
                   <AntDesign
                     name="delete"
@@ -43,9 +43,17 @@ const IndexScreen = ({ navigation }) => {
     </View>
   );
 };
-IndexScreen.navigationOptions = () => {
+IndexScreen.navigationOptions = ({ navigation }) => {
+  // console.log(props);
   return {
-    headerRight: () => <AntDesign name="plus" size={24} color="black" />,
+    headerRight: () => (
+      <AntDesign
+        name="plus"
+        size={24}
+        color="black"
+        onPress={() => navigation.navigate("Create")}
+      />
+    ),
   };
 };
 const styles = StyleSheet.create({
